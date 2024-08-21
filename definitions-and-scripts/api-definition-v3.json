@@ -1,0 +1,46 @@
+{
+  "id": "video-analytics",
+  "draft": true,
+  "version": "0.0.3",
+  "routes": [
+    {
+      "method": "Get",
+      "path": "/v3/latest-event-timestamp/{event-type}/{user-id}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "version": 0
+        },
+        "workerName": "analytics-${request.path.user-id}",
+        "response" : "${let result = get-latest-event-timestamp(request.path.event-type, request.path.user-id); {status: 200, body: result}}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/v3/status/{user-id}?{device-type}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-player-state(request.path.device-type); let response_body = if result == \"admin-netflix\" then  {status: 403, body: \"Unauthorized\"} else {status: 200, body: result} ; response_body}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/v3/player-state/{user-id}?{device-type}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-latest-event-details(request.path.device-type); let response_body = {status: 200, body: result} ; response_body}"
+      }
+    }
+  ]
+}
