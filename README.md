@@ -4,8 +4,10 @@
 1. Start with a use-case of Golem
 2. Explain why we need a HTTP API over the worker's functions
 3. Explain the functions that are exposed by the existing component (video_distribution_analytics.wasm)
-4. Explain the different possibilities of Rib script by adding routes one by one. This will include looking up from request details, and the explanation of Rib itself.
-5. Try all the APIs.
+4. Explain the different possibilities of Rib script by adding routes one by one.
+   * This will include looking up from request details, and the explanation of Rib itself.
+   * Explain how Worker-Gateway, with Rib, allow us to respond with a useful Http Response for different types of function results.
+5. Finally, try all the APIs, showing every route added actually works!
 
 ### Usecase: Video Distribution using Golem
 
@@ -146,6 +148,10 @@ response_body
 
 ##### Route-details 
 
+
+This will explain how worker-gateway exposes a `record` output of a worker as an Http Response.
+
+
 ```
  "method": "Get",
  "path": "/v3/player-state/{user-id}?{device-type}",
@@ -166,10 +172,11 @@ response_body
 
 ## Route 4: Get the total play time tracked for a particular device-type of the user
 
-In this case the worker actually responds with a `Result<u64, String>`. 
-We need to manipulate this data to send back a meaningful response to the user.
+This will explain how Rib allows us to expose a user-friendly Http response, when the worker function can either return an error message,
+for invalid inputs, such as trying to get the status of a device-type that isn't supported.
 
 ##### Route-details
+
 
 ```
  "method": "Get",
@@ -178,7 +185,7 @@ We need to manipulate this data to send back a meaningful response to the user.
       
 ```
 
-Rib: Explaining Patter Match, Error Handling, String Concatenation
+Rib:
 
 ```rib
 let result = get-total-play-time(request.path.device-type);  
@@ -192,8 +199,10 @@ let response_body = match result { ok(value) => "playtime:${value}", err(msg) =>
 
 ## Route 5: Get the total play time tracked for a particular movie played on a particular device-type of the user.
 
-In this case the worker actually responds with a `Result<Option<u64>, String>`.
-This indicates that the total playtime is a Ok(None) if the user hasn't ever played that movie yet.
+Rib: Explaining how Rib allows us to write up a useful Http Response, when worker function can either return an error message,
+or, it could return an optional indicating that user may or may not have started playing the movie yet. `Result<Option<u64>, String>`.
+
+Example: The total playtime is a Ok(None) if the user hasn't ever played that movie yet.
 And it can also throw an error with a message as `Str` if you pass an invalid device-id, or for other failure scenarios.
 
 ##### Route-details
@@ -205,14 +214,37 @@ And it can also throw an error with a message as `Str` if you pass an invalid de
       
 ```
 
-Rib: Explaining Patter Match, Error Handling, String Concatenation
-
 ```rib
-let result = get-total-play-time(request.path.device-type);  
-let status = match result { ok(_) => 200, err(_) => 400 };  
-let response_body = match result { ok(value) => "playtime:${value}", err(msg) => msg }; 
+let result = get-total-play-time-of-movie(request.path.device-type, request.path.movie-name);  
+let status = match result { ok(some(_)) => 200, ok(_) => 404, err(_) => 400 };  
+let response_body = match result { ok(some(value)) => "playtime:${value}",  ok(_) => "playtime:0", err(msg) => msg }; 
 {status: status, body: response_body}
 
 ```
 
 -------------
+
+## Route 5: Get the total play time tracked for a particular movie played on a particular device-type of the user.
+
+Rib: Explaining how worker-gateway supports a Put Request, by showing an example of adding an event to the
+particular user's event consumer. That is, expoosing an HTTP endpoint over a function that is reponsible
+for adding the event to the processing! This function also returns either a "ok message" or an "error message".
+
+
+##### Route-details
+
+```
+ "method": "Get",
+ "path": "/v3/total-play-time-of-movie/{user-id}?{device-type}&{movie-name}",
+ "workerName": "event-processor-${request.path.user-id}",
+      
+```
+
+```rib
+
+let result = add-event(request.body.event);  
+let status = match result { ok(_) => 200, err(_) => 400 };  
+let response_body = match result { ok(value) => value, err(msg) => msg }; 
+{status: status, body: response_body}
+
+```
