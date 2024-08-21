@@ -4,9 +4,8 @@
 1. Start with a use-case of Golem
 2. Explain why we need a HTTP API over the worker's functions
 3. Explain the functions that are exposed by the existing component (video_distribution_analytics.wasm)
-3. Explain the differnet possibilites of Rib script by adding routes one by one
-4. Try out all the APIs.
-
+4. Explain the different possibilities of Rib script by adding routes one by one. This will include looking up from request details, and the explanation of Rib itself.
+5. Try all the APIs.
 
 ### Usecase: Video Distribution using Golem
 
@@ -175,6 +174,33 @@ We need to manipulate this data to send back a meaningful response to the user.
 ```
  "method": "Get",
  "path": "/v3/total-play-time/{user-id}?{device-type}",
+ "workerName": "event-processor-${request.path.user-id}",
+      
+```
+
+Rib: Explaining Patter Match, Error Handling, String Concatenation
+
+```rib
+let result = get-total-play-time(request.path.device-type);  
+let status = match result { ok(_) => 200, err(_) => 400 };  
+let response_body = match result { ok(value) => "playtime:${value}", err(msg) => msg }; 
+{status: status, body: response_body}
+
+```
+
+-------------
+
+## Route 5: Get the total play time tracked for a particular movie played on a particular device-type of the user.
+
+In this case the worker actually responds with a `Result<Option<u64>, String>`.
+This indicates that the total playtime is a Ok(None) if the user hasn't ever played that movie yet.
+And it can also throw an error with a message as `Str` if you pass an invalid device-id, or for other failure scenarios.
+
+##### Route-details
+
+```
+ "method": "Get",
+ "path": "/v3/total-play-time-of-movie/{user-id}?{device-type}&{movie-name}",
  "workerName": "event-processor-${request.path.user-id}",
       
 ```
