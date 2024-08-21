@@ -9,7 +9,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
           "version": 0
         },
         "workerName": "analytics-${request.path.user-id}",
@@ -22,7 +22,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -35,7 +35,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -48,7 +48,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -62,11 +62,25 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
         "response" : "${let result = get-total-play-time-of-movie(request.path.device-type, request.path.movie-name);  let status = match result { ok(some(_)) => 200, ok(_) => 404, err(_) => 400 };  let response_body = match result { ok(some(value)) => \"playtime:${value}\",  ok(_) => \"playtime:0\", err(msg) => msg }; {status: status, body: response_body}}"
+      }
+    },
+    {
+
+      "method": "Post",
+      "path": "/v3/add-event",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.body.user-id}",
+        "response" : "${let result = add-event(request.body.event);  let status = match result { ok(_) => 200, err(_) => 400 };  let response_body = match result { ok(value) => value, err(msg) => msg }; {status: status, body: response_body}}"
       }
     }
   ]

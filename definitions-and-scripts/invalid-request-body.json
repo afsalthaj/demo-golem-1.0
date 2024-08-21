@@ -1,0 +1,9 @@
+{
+  "user-id": 200,
+  "event" : {
+    "eventtype" : "buffer",
+    "movie-name" : "avengers",
+    "device-type" : "ios",
+    "timestamp" : "2021-07-01T12:00:00Z"
+  }
+}
