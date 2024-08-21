@@ -86,7 +86,7 @@ Add the following routes one by one explaining the details
 ## Route 1: Get the time-stamp of the latest event tracked for a particular user
 
 
-```
+```json
 
  "method": "Get",
  "path": "/v3/latest-event-timestamp/{event-type}/{user-id}",
@@ -100,7 +100,7 @@ This implies the following rib-script will target that specific user's data.
 Rib: Explaining dynamically creating a worker using request details, simple let binding and type-inference
 
 
-```
+```scala
 let result = get-latest-event-timestamp(request.path.event-type, request.path.user-id); 
 {status: 200, body: result}
 
@@ -116,7 +116,7 @@ The result is simply sent back to the user as a response body.
 
 ##### Route-details
 
-```
+```json
 
  "method": "Get",
  "path": "/v3/status/{user-id}?{device-type}",
@@ -132,7 +132,7 @@ Rib: Explaining If Else condition to manipulate worker's response which is a sim
 Using `if-else` rib expression, it allows you to throw an unauthorised error if the user is an admin of the system.
 The output is a simple text
 
-```rib
+```scala
 
 let result = get-player-state(request.path.device-type); 
 let response_body = if result == \"admin-netflix\" then  {status: 403, body: \"Unauthorized\"} else {status: 200, body: result} ; 
@@ -152,7 +152,7 @@ response_body
 This will explain how worker-gateway exposes a `record` output of a worker as an Http Response.
 
 
-```
+```json
  "method": "Get",
  "path": "/v3/player-state/{user-id}?{device-type}",
  "workerName": "event-processor-${request.path.user-id}",
@@ -161,7 +161,7 @@ This will explain how worker-gateway exposes a `record` output of a worker as an
 
 Rib: In this case, body is a `record` type detailing the events. 
 
-```rib
+```scala
 let result = get-latest-event-details(request.path.device-type); 
 let response_body = {status: 200, body: result} ; 
 response_body
@@ -178,7 +178,7 @@ for invalid inputs, such as trying to get the status of a device-type that isn't
 ##### Route-details
 
 
-```
+```json
  "method": "Get",
  "path": "/v3/total-play-time/{user-id}?{device-type}",
  "workerName": "event-processor-${request.path.user-id}",
@@ -187,7 +187,7 @@ for invalid inputs, such as trying to get the status of a device-type that isn't
 
 Rib:
 
-```rib
+```scala
 let result = get-total-play-time(request.path.device-type);  
 let status = match result { ok(_) => 200, err(_) => 400 };  
 let response_body = match result { ok(value) => "playtime:${value}", err(msg) => msg }; 
@@ -207,14 +207,14 @@ And it can also throw an error with a message as `Str` if you pass an invalid de
 
 ##### Route-details
 
-```
+```json
  "method": "Get",
  "path": "/v3/total-play-time-of-movie/{user-id}?{device-type}&{movie-name}",
  "workerName": "event-processor-${request.path.user-id}",
       
 ```
 
-```rib
+```scala
 let result = get-total-play-time-of-movie(request.path.device-type, request.path.movie-name);  
 let status = match result { ok(some(_)) => 200, ok(_) => 404, err(_) => 400 };  
 let response_body = match result { ok(some(value)) => "playtime:${value}",  ok(_) => "playtime:0", err(msg) => msg }; 
@@ -233,14 +233,14 @@ for adding the event to the processing! This function also returns either a "ok 
 
 ##### Route-details
 
-```
+```json
  "method": "Get",
  "path": "/v3/total-play-time-of-movie/{user-id}?{device-type}&{movie-name}",
  "workerName": "event-processor-${request.path.user-id}",
       
 ```
 
-```rib
+```scala
 
 let result = add-event(request.body.event);  
 let status = match result { ok(_) => 200, err(_) => 400 };  
