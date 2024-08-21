@@ -248,3 +248,51 @@ let response_body = match result { ok(value) => value, err(msg) => msg };
 {status: status, body: response_body}
 
 ```
+-------------
+
+## Route 6: Get the latest event details by event type
+
+Rib: Explaining how Rib supports variant type
+
+
+##### Route-details
+
+```json
+ "method": "Get",
+ "path": "/v3/get-last-event-timestamp-by-type/{user-id}?{event-type}",
+ "workerName": "event-processor-${request.path.user-id}",
+      
+```
+
+```scala
+
+let result = get-latest-time-of(request.path.event-type); 
+let content = match result.event-type { buffer => "its a buffer event" };  
+{status: 200, body: content}
+
+```
+
+-------------
+
+## Route 7: Adding an event
+
+Rib: Explaining how Rib supports variant type
+
+
+##### Route-details
+
+```json
+ "method": "Post",
+ "path": "/v3/add-event",
+ "workerName": "event-processor-${request.body.user-id}",
+      
+```
+
+```scala
+
+let result = add-event(request.body.event);  
+let status = match result { ok(_) => 200, err(_) => 400 };  
+let response_body = match result { ok(value) => value, err(msg) => msg }; 
+{status: status, body: response_body}
+
+```
