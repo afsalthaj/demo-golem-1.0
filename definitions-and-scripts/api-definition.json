@@ -1,0 +1,33 @@
+{
+  "id": "video-analytics",
+  "draft": true,
+  "version": "0.0.1",
+  "routes": [
+    {
+      "method": "Get",
+      "path": "/latest-event-timestamp/{event-type}/{user-id}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "dbdc0ca2-db77-44f9-9f2f-7ccbe0a60669",
+          "version": 0
+        },
+        "workerName": "analytics-${request.path.user-id}",
+        "response" : "${let result = get-latest-event-timestamp(request.path.event-type, request.path.user-id); {status: 200, body: result}}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/status/{user-id}?{device-type}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "dbdc0ca2-db77-44f9-9f2f-7ccbe0a60669",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-player-state(request.path.device-type); let response_body = if result == \"admin-netflix\" then  {status: 403, body: \"Unauthorized\"} else {status: 200, body: result} ; response_body}"
+      }
+    }
+  ]
+}

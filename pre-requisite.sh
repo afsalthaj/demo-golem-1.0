@@ -1,0 +1,1 @@
+golem-cli component add --component-name video-distribution-analytics video_distribution_analytics.wasm
