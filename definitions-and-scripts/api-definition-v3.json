@@ -9,7 +9,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "analytics-${request.path.user-id}",
@@ -22,7 +22,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -35,7 +35,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -48,7 +48,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -62,7 +62,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -76,7 +76,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.body.user-id}",
@@ -90,11 +90,37 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
         "response" : "${let result = get-latest-time-of(request.path.event-type); let content = match result.event-type { buffer => \"its a buffer event\" };  {status: 200, body: content}}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/v3/unit-function/{user-id}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response": "${let result = unit-function();  {status: 200, body: result}}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/v3/poll/{user-id}/{connection-id}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "6746e237-73bb-4210-b7cb-0706bcc04e76",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response": "${let connection = { id: request.path.connection-id };let result = poll(connection);  {status: 200, body: result}}"
       }
     }
   ]
