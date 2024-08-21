@@ -3,10 +3,9 @@
 ## Strategy of Demo
 1. Start with a use-case of Golem
 2. Explain why we need a HTTP API over the worker's functions
-3. Explain the functions we are goi
+3. Explain the functions that are exposed by the existing component (video_distribution_analytics.wasm)
 3. Explain the differnet possibilites of Rib script by adding routes one by one
 4. Try out all the APIs.
-
 
 
 ### Usecase: Video Distribution using Golem
