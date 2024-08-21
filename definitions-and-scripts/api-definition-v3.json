@@ -54,6 +54,20 @@
         "workerName": "event-processor-${request.path.user-id}",
         "response" : "${let result = get-total-play-time(request.path.device-type);  let status = match result { ok(_) => 200, err(_) => 400 };  let response_body = match result { ok(value) => \"playtime:${value}\", err(msg) => msg }; {status: status, body: response_body}}"
       }
+    },
+    {
+
+      "method": "Get",
+      "path": "/v3/total-play-time-of-movie/{user-id}?{device-type}&{movie-name}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-total-play-time-of-movie(request.path.device-type, request.path.movie-name);  let status = match result { ok(some(_)) => 200, ok(_) => 404, err(_) => 400 };  let response_body = match result { ok(some(value)) => \"playtime:${value}\",  ok(_) => \"playtime:0\", err(msg) => msg }; {status: status, body: response_body}}"
+      }
     }
   ]
 }
