@@ -9,7 +9,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
           "version": 0
         },
         "workerName": "analytics-${request.path.user-id}",
@@ -22,7 +22,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -35,11 +35,24 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "371789bb-26dc-45fc-badd-07bbce66d5bd",
+          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
         "response" : "${let result = get-latest-event-details(request.path.device-type); let response_body = {status: 200, body: result} ; response_body}"
+      }
+    },
+    {
+      "method": "Get",
+      "path": "/v3/total-play-time/{user-id}?{device-type}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "280a7fbd-4939-48b7-b603-74f342e4fded",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-total-play-time(request.path.device-type);  let status = match result { ok(_) => 200, err(_) => 400 };  let response_body = match result { ok(value) => \"playtime:${value}\", err(msg) => msg }; {status: status, body: response_body}}"
       }
     }
   ]
