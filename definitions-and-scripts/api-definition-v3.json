@@ -9,7 +9,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "analytics-${request.path.user-id}",
@@ -22,7 +22,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -35,7 +35,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -48,7 +48,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -62,7 +62,7 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "event-processor-${request.path.user-id}",
@@ -76,11 +76,25 @@
       "binding": {
         "type": "wit-worker",
         "componentId": {
-          "componentId": "51163bf3-8ea4-4749-80e6-325434c93499",
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
           "version": 0
         },
         "workerName": "event-processor-${request.body.user-id}",
         "response" : "${let result = add-event(request.body.event);  let status = match result { ok(_) => 200, err(_) => 400 };  let response_body = match result { ok(value) => value, err(msg) => msg }; {status: status, body: response_body}}"
+      }
+    },
+    {
+
+      "method": "Get",
+      "path": "/v3/get-last-event-timestamp-by-type/{user-id}?{event-type}",
+      "binding": {
+        "type": "wit-worker",
+        "componentId": {
+          "componentId": "b0e9f85f-8a57-47ec-8748-0826b1c42e13",
+          "version": 0
+        },
+        "workerName": "event-processor-${request.path.user-id}",
+        "response" : "${let result = get-latest-time-of(request.path.event-type); let content = match result.event-type { buffer => \"its a buffer event\" };  {status: 200, body: content}}"
       }
     }
   ]
